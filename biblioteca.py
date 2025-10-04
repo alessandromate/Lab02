@@ -1,27 +1,57 @@
+import csv
 def carica_da_file(file_path):
-    """Carica i libri dal file"""
-    # TODO
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            print('Il file è stato trovato')
+            righe = file.readlines()
+            if not righe:
+                return none
+            biblioteca = []
+            for riga in righe[1:]:  # skippo prima riga perche è il num sezioni
+                dati = riga.strip().split(',')
+                libro = {
+                    'sezione': int(dati[4]),
+                    'titolo': dati[0],
+                    'autore': dati[1],
+                    'anno': int(dati[2]),
+                    'pagine': int(dati[3]),
+                }                                   #lista di dizionari
+                biblioteca.append(libro)
 
+            return biblioteca
 
+    except FileNotFoundError:                   #nel caso non venga trovato il file
+        print("File non trovato!")
+        return None
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
-    """Aggiunge un libro nella biblioteca"""
-    # TODO
-
+    nuovo_libro = {
+        'sezione': sezione,
+        'titolo': titolo,
+        'autore': autore,
+        'anno': anno,
+        'pagine': pagine
+    }
+    biblioteca.append(nuovo_libro)                  # lo aggiungo
+    return biblioteca
 
 def cerca_libro(biblioteca, titolo):
-    """Cerca un libro nella biblioteca dato il titolo"""
-    # TODO
-
+    risultato= False
+    for libro in biblioteca:
+        if libro['titolo'] == titolo:
+            risultato =True
+    return risultato
 
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
-    """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
-    # TODO
-
+    titoli_non_ord= []
+    for libro in biblioteca:
+        if libro['sezione'] == sezione:
+            titoli_non_ord.append(libro['titolo'])
+    titoli= sorted(titoli_non_ord)
+    return titoli
 
 def main():
     biblioteca = []
     file_path = "biblioteca.csv"
-
     while True:
         print("\n--- MENU BIBLIOTECA ---")
         print("1. Carica biblioteca da file")
@@ -83,7 +113,7 @@ def main():
                 print("Errore: inserire un valore numerico valido.")
                 continue
 
-            titoli = elenco_libri_sezione_per_titolo(biblioteca, sezione)
+            titoli = elenco_libri_sezione_per_titolo(biblioteca, sezione)  #risputa titoli riordinati della sez
             if titoli is not None:
                 print(f'\nSezione {sezione} ordinata:')
                 print("\n".join([f"- {titolo}" for titolo in titoli]))
@@ -97,4 +127,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
